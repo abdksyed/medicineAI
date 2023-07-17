@@ -156,7 +156,8 @@ dmypy.json
 cython_debug/
 
 # Pre Trained Models
-.hdf5
+*.hdf5
+*.h5
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
