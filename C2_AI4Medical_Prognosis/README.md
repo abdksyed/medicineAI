@@ -25,4 +25,13 @@ $$
 
 The risk equation doesn't need to be linear in the features themselves, it can be linear in $ln$ or $log$ of the features. Risk equation can also include interatction term like $KL$ above.
 
+Effect of Interaction terms:
 
+Without interaction terms, two features when added and plotted on a graph, we can say that when one feature is fixed, and the other feature is increased in the value, the overall score increases (score: Yellow > Green > Blue), irrespective of where we fixed the value in the first feature.
+
+![](./images/WithoutInteraction.png)
+
+    
+
+
+![](./images/WithInteraction.png)
