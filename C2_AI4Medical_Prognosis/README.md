@@ -31,7 +31,102 @@ Without interaction terms, two features when added and plotted on a graph, we ca
 
 ![](./images/WithoutInteraction.png)
 
-    
-
-
+With interaction terms, both the features are multiplied, now the relationship between both features depends, like in the image below when the age is 3.8, we can se as BP increase the risk score increase, but whereas at age 4.5, even with increase in BP the risk score remains in yellow.
+ 
 ![](./images/WithInteraction.png)
+
+### Evaluating Prognostic Models
+
+Basic idea of evaluation of prognostic models is to see how well it performs on pair of patients.
+
+Compare risk scores it assign to pair of individuals and to evaluate, whether the patients had the event. 
+
+Patient with worse outcome have a higher risk score, pair is called `concordant`, and if the patient doesn't have a higher risk score, it is called `not concordant`.
+
+We can't use the pair of patients who have the same outcome (pair is called `not permissible`).
+
+To evaluate the prognostic model, we give
+
++1, for a permissible pair that is concordant.  
++0.5 for a permissible pair for risk tie.
+
+$$
+C-index = \frac{\#\ concordant\ pairs + 0.5 * \#\ risk\ ties}{\#\ permissible\ pairs}
+$$
+
+C-index interpretation
+
+$P(score(A) > score(B) | Y_A > Y_B)$
+
+Random Model score = 0.5  
+Perfect Model score = 1.0
+
+## Module 2
+
+Decision Trees:  
+They divide the input space into high-risk and low-risk using vertical and horizontal boundaries. They can be viewed as partioning the input feature space into regions and can be represented as tree of if-else.
+
+Can model non-linear associations, which can't be modelled by linear models.
+
+After partioning, the risk-score is the fraction of patients affected (dead/had postive outcome of an event). We can binarise the output by using a threshold over the risk-score.
+
+### Fixing Overfitting
+
+If we don't stop growing the decision trees, they continue to create more and more partitions and get overly complex. Decision tree models can create overly complex trees that fit the training data almost perfectly.
+
+Can combat overfitting, by fixing the max depth a tree can grow to.
+
+Another way to combat is by using **Random Forest**.
+
+Random forests construct multiple decision trees and average their risk predictions.  
+Each tree in the forest is constructed using a random sample (sampling with replacement) of the patients.  
+Random Forest algorithm also modifies the splitting procedure in the construction of decision trees such that it uses a subset of features when creating decision boundaries
+
+other popular algorithms that use ensembles including **Gradient Boosting**, **XGBoost**, and **LightGBM**
+
+### Identifying Missing Data
+
+Naive method is to exclude the data points, having any missing data. But this leads a major issue of change in distribution.
+
+Even if we drop data points after splitting into train and test set. The model trained on train set, may perform good on test set, but when a new test set arrives, the model may perform poorly, since the new dataset may not have any missing value and the distribution without dropping is much different from the initial train or test set.
+
+#### Missing Completely at Random
+Missingness not dependent on anything is the missing value is a complete random event, which can happend to any datapoint.
+
+$$
+p(missing) = constant
+$$
+
+A complete-case analysis (where we drop missing value) will **NOT** lead to a biased model
+
+#### Missing at Random
+
+Missingness depends only on available information. The missing values is due to a variable, like some fixed value of randomness when the value of a variable is something and some other randomness when value of variable is something else.
+
+$$
+p(missing) \ne constant
+$$
+$$
+p(missing|variable < x) = some\_value \ne p(missing|variable>x)
+$$
+
+#### Missing Not at Random
+
+Missingness depends on unavailable information. The values are missing due to some variable which is not available in the dataset and the missigness can't be determined.
+
+$$
+p(missing) \ne constant
+$$
+
+### Imputation
+
+Mean Imputation:
+
+Fill all the missing values with the mean of the column apart from those missing values.
+
+For test data too, use the mean of the column from the train dataset to impute the missing values.
+
+Regression Imputation:
+
+Learn a linear model for a column with missing values with the other columns(features).
+
