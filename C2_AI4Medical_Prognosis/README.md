@@ -162,7 +162,7 @@ Where the second patient is a censor data, as the study was done by 4 years and 
 ### Estimate Survival
 
 $$
-S(t) = Pr(T > t) = \frac{\# patients survived to t months}{\# patients}
+S(t) = Pr(T > t) = \frac{no.\ of\ patients survived to t months}{no.\ of\ patients}
 $$
 
 #### Example Survival Estimation where t = 25 and with censored observation.
@@ -184,7 +184,7 @@ P(T \ge 26 | T \ge 25) = P(T > 25 | T \ge 25) = 1 - P(T = 25 | T \ge 25)
 \newline
 \implies S(25) = (1 - P(T = 25 | T \ge 25)) (1 - P(T = 24 | T \ge 24)) ... 1 - P(T = 0 | T \ge 0)
 \newline
-P(T = 25 | T \ge 25) = \frac{\#\ died\ at\ exactly\ 25}{\# known\ to\ survive\ to\ 25}
+P(T = 25 | T \ge 25) = \frac{no.\ of\ died\ at\ exactly\ 25}{no.\ of\ known\ to\ survive\ to\ 25}
 \newline
 $$
 
@@ -192,7 +192,7 @@ Generalization the above for any time $t$.
 $$
 S(t) = \prod_{i=0}^{t} 1 - P(T = i | T \ge i)
 \newline
-\implies \frac{\#\ died\ at\ exactly\ at\ i}{\#\ known\ survive\ to\ i}
+\implies \frac{no.\ of\ died\ at\ exactly\ at\ i}{no.\ of\ known\ survive\ to\ i}
 \newline
 \implies S(t) = \prod_{i=0}^{t} 1 -\frac{d_i}{n_i}
 $$
