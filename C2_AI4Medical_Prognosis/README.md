@@ -51,7 +51,7 @@ To evaluate the prognostic model, we give
 +0.5 for a permissible pair for risk tie.
 
 $$
-C-index = \frac{\#\ concordant\ pairs + 0.5 * \#\ risk\ ties}{\#\ permissible\ pairs}
+C-index = \frac{no.\ of\ \ concordant\ pairs + 0.5 * no.\ of\ risk\ ties}{no.\ of\ permissible\ pairs}
 $$
 
 C-index interpretation
@@ -130,3 +130,71 @@ Regression Imputation:
 
 Learn a linear model for a column with missing values with the other columns(features).
 
+## Module 3
+
+### Survival Models
+
+A survival model outputs the survival function which gives the probability that the time to event (death/risk) is is greather than some time $t$.
+
+$$
+S(t) = Pr(T > t)
+$$
+
+This is 1 - Prognosis modelling which we did earlier, but the extra addition is for $t$ 2 or 5 or 10 years, we had to create separate models, but a single survival model can do for any time $t$.
+
+#### Properties
+* $S(u) \le S(v)\ if\ u \ge v$ - As time goes by, the survival probability should never go up (stay constant or go down)
+* (typically) $S(t)\ is\ 1\ if\ t = 0,\ else\ 0\ if\ t = \infty$
+
+Censoring (in data), is a case where we want to see time for a particular event to happen, but might not see the event for several reasons like end of study, patient withdrawal etc.
+
+In Survival data, we change the data when compared to prognosis model where the label was binary (0/1 for the event), to a label which is time taken for the event (in months, years etc.). 
+
+For ex:
+|i|Yi|
+|-|-|
+|1|12|
+|2|48+|
+|3|24+|
+
+Where the second patient is a censor data, as the study was done by 4 years and the patient didn't had the event during study and last patient is another censor data where the patient dropped after 2 years, so the value is $24+$
+
+### Estimate Survival
+
+$$
+S(t) = Pr(T > t) = \frac{\# patients survived to t months}{\# patients}
+$$
+
+#### Example Survival Estimation where t = 25 and with censored observation.
+
+$$
+S(25) = P(T > 25)
+\newline
+= P(T \ge 26)
+\newline
+= P(T \ge 26, T \ge 25, ..., T \ge 0)
+\newline
+= P(T \ge 26 | T \ge 25)P(T \ge 25 | T \ge 24) ... P(T \ge 1 | T \ge 0) P(T \ge 0)
+\newline
+\because P(T \ge 0) = 1
+\newline
+= P(T \ge 26 | T \ge 25)P(T \ge 25 | T \ge 24) ... P(T \ge 1 | T \ge 0)
+\newline
+P(T \ge 26 | T \ge 25) = P(T > 25 | T \ge 25) = 1 - P(T = 25 | T \ge 25)
+\newline
+\implies S(25) = (1 - P(T = 25 | T \ge 25)) (1 - P(T = 24 | T \ge 24)) ... 1 - P(T = 0 | T \ge 0)
+\newline
+P(T = 25 | T \ge 25) = \frac{\#\ died\ at\ exactly\ 25}{\# known\ to\ survive\ to\ 25}
+\newline
+$$
+
+Generalization the above for any time $t$.
+$$
+S(t) = \prod_{i=0}^{t} 1 - P(T = i | T \ge i)
+\newline
+\implies \frac{\#\ died\ at\ exactly\ at\ i}{\#\ known\ survive\ to\ i}
+\newline
+\implies S(t) = \prod_{i=0}^{t} 1 -\frac{d_i}{n_i}
+$$
+
+This is known as Kaplan Meier Estimate and is applied to all the patients in the data and isn't specific to a particular patient.
